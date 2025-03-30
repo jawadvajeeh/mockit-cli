@@ -1,0 +1,23 @@
+{
+  "name": "mockit-cli",
+  "version": "1.0.0",
+  "description": "Mock any API in seconds. Config-driven. CLI-powered. No backend required.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "bin": {
+    "hello-mockit": "./dist/index.js"
+  },
+  "files": [
+	"dist",
+	"README.md"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "typescript": "^5.8.2"
+  }
+}
