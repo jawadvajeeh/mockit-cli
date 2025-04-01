@@ -6,13 +6,17 @@ import pkgJSON from "../package.json";
 import fs from "fs";
 import z from "zod";
 import { getType } from "./utils";
+import { createServer } from "./createServer";
+import { configSchema, Route } from "./configSchema";
 const program = new Command();
 
 program
 	.name(pkgJSON.name)
 	.description(pkgJSON.description)
 	.version(pkgJSON.version)
-	.option('-c, --config <path>', 'Path to the JSON config file');
+	.option('-c, --config <path>', 'Path to the JSON config file')
+	.option('-h, --host <host>', 'Host to bind the server to', 'localhost')
+	.option('-p, --port <port>', 'Port to bind the server to', '3000');
 
 program.parse();
 
@@ -35,19 +39,10 @@ if (!fs.existsSync(options.config)) {
 
 
 // check if config file is a valid JSON
+let routes: Route[] = [];
 try {
 	const configFileContent = fs.readFileSync(options.config, 'utf8');
 	const config = JSON.parse(configFileContent);
-
-	const routeSchema = z.object({
-		response: z.any().refine((value) => value !== undefined, { message: "Please provide response for all the routes." }),
-		method: z.string().optional().default('GET').refine((method) => ['GET', 'POST', 'PUT', 'DELETE'].includes(method), { message: 'Invalid method' }),
-		status: z.number().optional().default(200),
-		delay: z.number().optional().default(0),
-	},
-	);
-
-	const configSchema = z.record(z.string().startsWith("/", "Route must start with /"), routeSchema);
 
 	const validatedConfig = configSchema.parse(config);
 
@@ -55,15 +50,13 @@ try {
 		console.error(`Error: Config file is not a valid JSON object.`);
 		process.exit(1);
 	}
-	const routes = Object.entries(validatedConfig).map(([path, routeDefinition]) => ({
+	routes = Object.entries(validatedConfig).map(([path, routeDefinition]) => ({
 		path,
 		method: routeDefinition.method,
 		response: routeDefinition.response,
 		status: routeDefinition.status,
 		delay: routeDefinition.delay,
 	}));
-
-	console.log(routes);
 } catch (error) {
 	if (error instanceof z.ZodError) {
 		console.error(`Validation Error: ${error.errors.map((e) => e.message).join(', ')}`);
@@ -72,3 +65,20 @@ try {
 	}
 	process.exit(1);
 }
+
+
+
+function startServer() {
+	const host = options.host;
+	const port = options.port;
+
+	createServer({ host, port }, routes)
+		.then(() => {
+			console.log(`Server running at http://${host}:${port}`);
+		})
+		.catch((error) => {
+			console.error(`Error starting server: ${error.message}`);
+		});
+}
+
+startServer();
