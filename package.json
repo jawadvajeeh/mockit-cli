@@ -11,6 +11,7 @@
   "bin": {
     "mockit": "./dist/index.js"
   },
+  "repository": "jawadvajeeh/mockit-cli",
   "files": [
     "dist",
     "README.md"
@@ -36,7 +37,11 @@
     "testing",
     "mockit"
   ],
-  "author": "",
+  "author": {
+	"name": "Mohammed Abdul Jawad Vajeeh",
+	"email": "jawadvajeeh@gmail.com",
+	"url": "https://jawadvajeeh.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.13.14",
