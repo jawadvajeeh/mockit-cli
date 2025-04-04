@@ -15,7 +15,27 @@
     "dist",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+	"mock",
+  "mock-server",
+  "mock-api",
+  "cli",
+  "api-mocking",
+  "rest-api",
+  "fake-api",
+  "api-testing",
+  "json-server",
+  "typescript",
+  "developer-tools",
+  "mock-responses",
+  "http-server",
+  "api-prototyping",
+  "polka",
+  "frontend",
+  "mobile",
+  "testing",
+  "mockit"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
